@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="robotiq_2f_85">
+    <!-- parameters -->
+    <xacro:arg name="prefix" default="" />
+
+    <!-- Import macro -->
+    <xacro:include filename="$(find robotiq_2f_85_description)/urdf/robotiq_2f_85_macro.xacro" />
+
+    <link name="world" />
+    <xacro:robotiq_2f_85 parent="world" prefix="$(arg prefix)">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:robotiq_2f_85>
+</robot>
