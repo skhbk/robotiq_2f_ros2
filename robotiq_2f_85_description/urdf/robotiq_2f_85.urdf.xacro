@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro" name="robotiq_2f_85">
     <!-- parameters -->
-    <xacro:arg name="prefix" default="" />
+    <xacro:arg name="prefix" default="robotiq_2f_" />
 
     <!-- Import macro -->
     <xacro:include filename="$(find robotiq_2f_85_description)/urdf/robotiq_2f_85_macro.xacro" />

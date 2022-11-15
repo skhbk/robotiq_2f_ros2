@@ -27,9 +27,8 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription
 from launch.substitutions import (
-    LaunchConfiguration,
     Command,
     FindExecutable,
     PathJoinSubstitution,
@@ -40,15 +39,6 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    args = []
-
-    args.append(
-        DeclareLaunchArgument(
-            name="prefix",
-            default_value="",
-        )
-    )
-
     robot_description_content = Command(
         [
             PathJoinSubstitution([FindExecutable(name="xacro")]),
@@ -60,9 +50,6 @@ def generate_launch_description():
                     "robotiq_2f_85.urdf.xacro",
                 ]
             ),
-            " ",
-            "prefix:=",
-            LaunchConfiguration("prefix"),
         ]
     )
 
@@ -115,4 +102,4 @@ def generate_launch_description():
         gazebo_spawn_robot,
     ]
 
-    return LaunchDescription(args + nodes)
+    return LaunchDescription(nodes)
