@@ -6,8 +6,12 @@
     <!-- Import macro -->
     <xacro:include filename="$(find robotiq_2f_85_description)/urdf/robotiq_2f_85_macro.xacro" />
 
+    <xacro:robotiq_2f_85 prefix="$(arg prefix)" />
+
     <link name="world" />
-    <xacro:robotiq_2f_85 parent="world" prefix="$(arg prefix)">
+    <joint name="$(arg prefix)base_joint" type="fixed">
+        <parent link="world" />
+        <child link="$(arg prefix)base_link" />
         <origin xyz="0 0 0" rpy="0 0 0" />
-    </xacro:robotiq_2f_85>
+    </joint>
 </robot>
