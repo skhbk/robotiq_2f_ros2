@@ -1,17 +1,25 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro" name="robotiq_2f_85">
-    <!-- parameters -->
+    <!-- Parameters -->
     <xacro:arg name="prefix" default="robotiq_2f_" />
+    <xacro:arg name="ur_coupling" default="false" />
 
     <!-- Import macro -->
     <xacro:include filename="$(find robotiq_2f_85_description)/urdf/robotiq_2f_85_macro.xacro" />
 
-    <xacro:robotiq_2f_85 prefix="$(arg prefix)" />
+    <xacro:robotiq_2f_85 prefix="$(arg prefix)" ur_coupling="$(arg ur_coupling)" />
 
+    <!-- Joint with world -->
     <link name="world" />
-    <joint name="$(arg prefix)base_joint" type="fixed">
+    <xacro:if value="$(arg ur_coupling)">
+        <xacro:property name="root_link" value="$(arg prefix)coupling_link" />
+    </xacro:if>
+    <xacro:unless value="$(arg ur_coupling)">
+        <xacro:property name="root_link" value="$(arg prefix)base_link" />
+    </xacro:unless>
+    <joint name="$(arg prefix)root_joint" type="fixed">
         <parent link="world" />
-        <child link="$(arg prefix)base_link" />
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <child link="${root_link}" />
+        <origin xyz="0 0 0.01" rpy="0 0 0" />
     </joint>
 </robot>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-    <xacro:macro name="robotiq_2f_85" params="prefix">
+    <xacro:macro name="robotiq_2f_85" params="prefix ur_coupling:=false">
         <xacro:property name="description_package" value="file://$(find robotiq_2f_85_description)" />
 
         <link name="${prefix}base_link">
@@ -20,6 +20,32 @@
                 <inertia ixx="481.2e-6" iyy="547.0e-6" izz="366.8e-6" ixy="0.0" ixz="0.0" iyz="0.3e-6" />
             </inertial>
         </link>
+
+        <xacro:if value="${ur_coupling}">
+            <link name="${prefix}coupling_link">
+                <visual>
+                    <geometry>
+                        <mesh filename="${description_package}/meshes/visual/grp_es_cpl_062.dae" />
+                    </geometry>
+                </visual>
+                <collision>
+                    <geometry>
+                        <mesh filename="${description_package}/meshes/collision/grp_es_cpl_062.stl" />
+                    </geometry>
+                </collision>
+                <inertial>
+                    <origin xyz="-0.9e-3 0.0 5.26e-3" rpy="0 0 0" />
+                    <mass value="0.100" />
+                    <inertia ixx="40.8e-6" iyy="42.9e-6" izz="80.7e-6" ixy="0.4e-6" ixz="-0.1e-6" iyz="0.2e-6" />
+                </inertial>
+            </link>
+
+            <joint name="${prefix}base_joint" type="fixed">
+                <parent link="${prefix}coupling_link" />
+                <child link="${prefix}base_link" />
+                <origin xyz="0 0 11e-3" rpy="0 0 0" />
+            </joint>
+        </xacro:if>
 
         <!-- Macro to define a single finger -->
         <xacro:macro name="finger" params="finger mirror">
