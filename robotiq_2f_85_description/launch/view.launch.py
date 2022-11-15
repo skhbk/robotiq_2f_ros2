@@ -27,13 +27,11 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
 from launch.substitutions import (
     Command,
     FindExecutable,
     PathJoinSubstitution,
 )
-from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
 
@@ -78,28 +76,6 @@ def generate_launch_description():
         emulate_tty=True,
     )
 
-    gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution(
-                [FindPackageShare("gazebo_ros"), "launch", "gazebo.launch.py"]
-            )
-        ),
-    )
-
-    gazebo_spawn_robot = Node(
-        package="gazebo_ros",
-        executable="spawn_entity.py",
-        name="spawn_robotiq_2f_85",
-        arguments=["-entity", "robotiq_2f_85", "-topic", "robot_description"],
-        output="screen",
-    )
-
-    nodes = [
-        robot_state_publisher_node,
-        joint_state_publisher_node,
-        rviz_node,
-        gazebo,
-        gazebo_spawn_robot,
-    ]
+    nodes = [robot_state_publisher_node, joint_state_publisher_node, rviz_node]
 
     return LaunchDescription(nodes)
