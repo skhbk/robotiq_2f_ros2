@@ -1,17 +1,21 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-    <xacro:macro name="robotiq_2f_85" params="prefix ur_coupling:=false">
-        <xacro:property name="description_package" value="file://$(find robotiq_2f_85_description)" />
+    <xacro:macro name="robotiq_2f_85" params="name prefix ur_coupling:=false">
+        <xacro:property name="description_package" value="$(find robotiq_2f_85_description)" />
+
+        <!-- ros2_control -->
+        <xacro:include filename="${description_package}/urdf/robotiq_2f_85.ros2_control.xacro" />
+        <xacro:robotiq_2f_85_ros2_control name="${name}" prefix="${prefix}" />
 
         <link name="${prefix}base_link">
             <visual>
                 <geometry>
-                    <mesh filename="${description_package}/meshes/visual/base.dae" />
+                    <mesh filename="file://${description_package}/meshes/visual/base.dae" />
                 </geometry>
             </visual>
             <collision>
                 <geometry>
-                    <mesh filename="${description_package}/meshes/collision/base.stl" />
+                    <mesh filename="file://${description_package}/meshes/collision/base.stl" />
                 </geometry>
             </collision>
             <inertial>
@@ -25,12 +29,12 @@
             <link name="${prefix}coupling_link">
                 <visual>
                     <geometry>
-                        <mesh filename="${description_package}/meshes/visual/grp_es_cpl_062.dae" />
+                        <mesh filename="file://${description_package}/meshes/visual/grp_es_cpl_062.dae" />
                     </geometry>
                 </visual>
                 <collision>
                     <geometry>
-                        <mesh filename="${description_package}/meshes/collision/grp_es_cpl_062.stl" />
+                        <mesh filename="file://${description_package}/meshes/collision/grp_es_cpl_062.stl" />
                     </geometry>
                 </collision>
                 <inertial>
@@ -61,12 +65,12 @@
             <link name="${prefix}${finger}_fingertip_link">
                 <visual>
                     <geometry>
-                        <mesh filename="${description_package}/meshes/visual/fingertip.dae" />
+                        <mesh filename="file://${description_package}/meshes/visual/fingertip.dae" />
                     </geometry>
                 </visual>
                 <collision>
                     <geometry>
-                        <mesh filename="${description_package}/meshes/collision/fingertip.stl" />
+                        <mesh filename="file://${description_package}/meshes/collision/fingertip.stl" />
                     </geometry>
                 </collision>
                 <inertial>
@@ -78,12 +82,12 @@
             <link name="${prefix}${finger}_finger1_link">
                 <visual>
                     <geometry>
-                        <mesh filename="${description_package}/meshes/visual/finger1.dae" />
+                        <mesh filename="file://${description_package}/meshes/visual/finger1.dae" />
                     </geometry>
                 </visual>
                 <collision>
                     <geometry>
-                        <mesh filename="${description_package}/meshes/collision/finger1.stl" />
+                        <mesh filename="file://${description_package}/meshes/collision/finger1.stl" />
                     </geometry>
                 </collision>
                 <inertial>
@@ -95,12 +99,12 @@
             <link name="${prefix}${finger}_finger2_link">
                 <visual>
                     <geometry>
-                        <mesh filename="${description_package}/meshes/visual/finger2.dae" />
+                        <mesh filename="file://${description_package}/meshes/visual/finger2.dae" />
                     </geometry>
                 </visual>
                 <collision>
                     <geometry>
-                        <mesh filename="${description_package}/meshes/collision/finger2.stl" />
+                        <mesh filename="file://${description_package}/meshes/collision/finger2.stl" />
                     </geometry>
                 </collision>
                 <inertial>
@@ -112,12 +116,12 @@
             <link name="${prefix}${finger}_finger3_link">
                 <visual>
                     <geometry>
-                        <mesh filename="${description_package}/meshes/visual/finger3.dae" />
+                        <mesh filename="file://${description_package}/meshes/visual/finger3.dae" />
                     </geometry>
                 </visual>
                 <collision>
                     <geometry>
-                        <mesh filename="${description_package}/meshes/collision/finger3.stl" />
+                        <mesh filename="file://${description_package}/meshes/collision/finger3.stl" />
                     </geometry>
                 </collision>
                 <inertial>
@@ -129,12 +133,12 @@
             <link name="${prefix}${finger}_finger4_link">
                 <visual>
                     <geometry>
-                        <mesh filename="${description_package}/meshes/visual/finger4.dae" />
+                        <mesh filename="file://${description_package}/meshes/visual/finger4.dae" />
                     </geometry>
                 </visual>
                 <collision>
                     <geometry>
-                        <mesh filename="${description_package}/meshes/collision/finger4.stl" />
+                        <mesh filename="file://${description_package}/meshes/collision/finger4.stl" />
                     </geometry>
                 </collision>
                 <inertial>

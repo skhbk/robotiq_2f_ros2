@@ -7,7 +7,7 @@
     <!-- Import macro -->
     <xacro:include filename="$(find robotiq_2f_85_description)/urdf/robotiq_2f_85_macro.xacro" />
 
-    <xacro:robotiq_2f_85 prefix="$(arg prefix)" ur_coupling="$(arg ur_coupling)" />
+    <xacro:robotiq_2f_85 name="robotiq_2f_85" prefix="$(arg prefix)" ur_coupling="$(arg ur_coupling)" />
 
     <!-- Joint with world -->
     <link name="world" />
