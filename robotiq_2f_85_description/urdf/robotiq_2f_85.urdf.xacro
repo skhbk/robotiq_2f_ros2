@@ -3,11 +3,17 @@
     <!-- Parameters -->
     <xacro:arg name="prefix" default="robotiq_2f_" />
     <xacro:arg name="ur_coupling" default="false" />
+    <xacro:arg name="mimic" default="true" />
 
     <!-- Import macro -->
     <xacro:include filename="$(find robotiq_2f_85_description)/urdf/robotiq_2f_85_macro.xacro" />
 
-    <xacro:robotiq_2f_85 name="robotiq_2f_85" prefix="$(arg prefix)" ur_coupling="$(arg ur_coupling)" />
+    <xacro:robotiq_2f_85
+        name="robotiq_2f_85"
+        prefix="$(arg prefix)"
+        ur_coupling="$(arg ur_coupling)"
+        mimic="$(arg mimic)"
+    />
 
     <!-- Joint with world -->
     <link name="world" />
