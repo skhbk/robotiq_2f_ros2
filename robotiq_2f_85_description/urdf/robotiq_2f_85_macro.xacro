@@ -177,11 +177,12 @@
                     <mimic joint="${prefix}${finger}_finger1_joint" />
                 </xacro:if>
             </joint>
-            <joint name="${prefix}${finger}_finger4-2_joint" type="continuous">
+            <joint name="${prefix}${finger}_finger4-2_joint" type="revolute">
                 <parent link="${prefix}${finger}_finger2_link" />
                 <child link="${prefix}${finger}_finger4_link" />
                 <axis xyz="0 -1 0" />
                 <origin xyz="4.30896e-3 0.0 47.39022e-3" rpy="0 0 0" />
+                <limit lower="-${2*pi/3}" upper="${pi/4}" velocity="0.5" effort="50" />
                 <xacro:if value="${mimic}">
                     <mimic joint="${prefix}${finger}_finger1_joint" multiplier="-1" />
                 </xacro:if>
