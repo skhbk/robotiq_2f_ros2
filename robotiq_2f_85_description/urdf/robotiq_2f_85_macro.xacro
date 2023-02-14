@@ -1,209 +1,210 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-    <xacro:macro name="robotiq_2f_85" params="name prefix ur_coupling:=false mimic:=true">
-        <xacro:property name="description_package" value="$(find robotiq_2f_85_description)" />
+  <xacro:macro name="robotiq_2f_85"
+    params="name prefix ur_coupling:=false mimic:=true sim_gazebo:=false">
+    <xacro:property name="description_package" value="$(find robotiq_2f_85_description)" />
 
-        <!-- ros2_control -->
-        <xacro:include filename="${description_package}/urdf/robotiq_2f_85.ros2_control.xacro" />
-        <xacro:robotiq_2f_85_ros2_control name="${name}" prefix="${prefix}" />
+    <!-- ros2_control -->
+    <xacro:include filename="${description_package}/urdf/robotiq_2f_85.ros2_control.xacro" />
+    <xacro:robotiq_2f_85_ros2_control name="${name}" prefix="${prefix}" sim_gazebo="${sim_gazebo}" />
 
-        <link name="${prefix}base_link">
-            <visual>
-                <geometry>
-                    <mesh filename="file://${description_package}/meshes/visual/base.dae" />
-                </geometry>
-            </visual>
-            <collision>
-                <geometry>
-                    <mesh filename="file://${description_package}/meshes/collision/base.stl" />
-                </geometry>
-            </collision>
-            <inertial>
-                <origin xyz="0.0 0.0 32.2e-3" rpy="0 0 0" />
-                <mass value="0.616" />
-                <inertia ixx="481.2e-6" iyy="547.0e-6" izz="366.8e-6" ixy="0.0" ixz="0.0" iyz="0.3e-6" />
-            </inertial>
-        </link>
+    <link name="${prefix}base_link">
+      <visual>
+        <geometry>
+          <mesh filename="file://${description_package}/meshes/visual/base.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="file://${description_package}/meshes/collision/base.stl" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 32.2e-3" rpy="0 0 0" />
+        <mass value="0.616" />
+        <inertia ixx="481.2e-6" iyy="547.0e-6" izz="366.8e-6" ixy="0.0" ixz="0.0" iyz="0.3e-6" />
+      </inertial>
+    </link>
 
-        <xacro:if value="${ur_coupling}">
-            <link name="${prefix}coupling_link">
-                <visual>
-                    <geometry>
-                        <mesh filename="file://${description_package}/meshes/visual/grp_es_cpl_062.dae" />
-                    </geometry>
-                </visual>
-                <collision>
-                    <geometry>
-                        <mesh filename="file://${description_package}/meshes/collision/grp_es_cpl_062.stl" />
-                    </geometry>
-                </collision>
-                <inertial>
-                    <origin xyz="-0.9e-3 0.0 5.26e-3" rpy="0 0 0" />
-                    <mass value="0.100" />
-                    <inertia ixx="40.8e-6" iyy="42.9e-6" izz="80.7e-6" ixy="0.4e-6" ixz="-0.1e-6" iyz="0.2e-6" />
-                </inertial>
-            </link>
+    <xacro:if value="${ur_coupling}">
+      <link name="${prefix}coupling_link">
+        <visual>
+          <geometry>
+            <mesh filename="file://${description_package}/meshes/visual/grp_es_cpl_062.dae" />
+          </geometry>
+        </visual>
+        <collision>
+          <geometry>
+            <mesh filename="file://${description_package}/meshes/collision/grp_es_cpl_062.stl" />
+          </geometry>
+        </collision>
+        <inertial>
+          <origin xyz="-0.9e-3 0.0 5.26e-3" rpy="0 0 0" />
+          <mass value="0.100" />
+          <inertia ixx="40.8e-6" iyy="42.9e-6" izz="80.7e-6" ixy="0.4e-6" ixz="-0.1e-6" iyz="0.2e-6" />
+        </inertial>
+      </link>
 
-            <joint name="${prefix}base_joint" type="fixed">
-                <parent link="${prefix}coupling_link" />
-                <child link="${prefix}base_link" />
-                <origin xyz="0 0 11e-3" rpy="0 0 0" />
-            </joint>
+      <joint name="${prefix}base_joint" type="fixed">
+        <parent link="${prefix}coupling_link" />
+        <child link="${prefix}base_link" />
+        <origin xyz="0 0 11e-3" rpy="0 0 0" />
+      </joint>
+    </xacro:if>
+
+    <!-- Macro to define a single finger -->
+    <xacro:macro name="finger" params="finger mirror">
+      <xacro:if value="${mirror}">
+        <xacro:property name="x_gain" value="-1" />
+        <xacro:property name="yaw" value="${pi}" />
+      </xacro:if>
+      <xacro:unless value="${mirror}">
+        <xacro:property name="x_gain" value="1" />
+        <xacro:property name="yaw" value="0" />
+      </xacro:unless>
+
+      <link name="${prefix}${finger}_fingertip_link">
+        <visual>
+          <geometry>
+            <mesh filename="file://${description_package}/meshes/visual/fingertip.dae" />
+          </geometry>
+        </visual>
+        <collision>
+          <geometry>
+            <mesh filename="file://${description_package}/meshes/collision/fingertip.stl" />
+          </geometry>
+        </collision>
+        <inertial>
+          <origin xyz="-7.9e-3 0.0 15.8e-3" rpy="0 0 0" />
+          <mass value="0.020" />
+          <inertia ixx="3.6e-6" iyy="3.3e-6" izz="1.3e-6" ixy="0.0" ixz="0.5e-6" iyz="0.0" />
+        </inertial>
+      </link>
+      <link name="${prefix}${finger}_finger1_link">
+        <visual>
+          <geometry>
+            <mesh filename="file://${description_package}/meshes/visual/finger1.dae" />
+          </geometry>
+        </visual>
+        <collision>
+          <geometry>
+            <mesh filename="file://${description_package}/meshes/collision/finger1.stl" />
+          </geometry>
+        </collision>
+        <inertial>
+          <origin xyz="12.1e-3 0.0 -0.9e-3" rpy="0 0 0" />
+          <mass value="0.013" />
+          <inertia ixx="0.3e-6" iyy="2.1e-6" izz="2.1e-6" ixy="0.0" ixz="0.1e-6" iyz="0.0" />
+        </inertial>
+      </link>
+      <link name="${prefix}${finger}_finger2_link">
+        <visual>
+          <geometry>
+            <mesh filename="file://${description_package}/meshes/visual/finger2.dae" />
+          </geometry>
+        </visual>
+        <collision>
+          <geometry>
+            <mesh filename="file://${description_package}/meshes/collision/finger2.stl" />
+          </geometry>
+        </collision>
+        <inertial>
+          <origin xyz="1.4e-3 0.0 18.9e-3" rpy="0 0 0" />
+          <mass value="0.039" />
+          <inertia ixx="12.7e-6" iyy="10.9e-6" izz="4.9e-6" ixy="0.0" ixz="-2.2e-6" iyz="0.0" />
+        </inertial>
+      </link>
+      <link name="${prefix}${finger}_finger3_link">
+        <visual>
+          <geometry>
+            <mesh filename="file://${description_package}/meshes/visual/finger3.dae" />
+          </geometry>
+        </visual>
+        <collision>
+          <geometry>
+            <mesh filename="file://${description_package}/meshes/collision/finger3.stl" />
+          </geometry>
+        </collision>
+        <inertial>
+          <origin xyz="19.5e-3 0.0 21.9e-3" rpy="0 0 0" />
+          <mass value="0.028" />
+          <inertia ixx="8.7e-6" iyy="8.1e-6" izz="7.8e-6" ixy="0.0" ixz="-3.7e-6" iyz="0.0" />
+        </inertial>
+      </link>
+      <link name="${prefix}${finger}_finger4_link">
+        <visual>
+          <geometry>
+            <mesh filename="file://${description_package}/meshes/visual/finger4.dae" />
+          </geometry>
+        </visual>
+        <collision>
+          <geometry>
+            <mesh filename="file://${description_package}/meshes/collision/finger4.stl" />
+          </geometry>
+        </collision>
+        <inertial>
+          <origin xyz="-9.3e-3 0.0 4.0e-3" rpy="0 0 0" />
+          <mass value="0.018" />
+          <inertia ixx="0.9e-6" iyy="1.6e-6" izz="1.7e-6" ixy="0.0" ixz="0.4e-6" iyz="0.0" />
+        </inertial>
+      </link>
+
+      <joint name="${prefix}${finger}_fingertip_joint" type="fixed">
+        <parent link="${prefix}${finger}_finger4_link" />
+        <child link="${prefix}${finger}_fingertip_link" />
+        <origin xyz="-11.40173e-3 0.0 13.01497e-3" rpy="0 0 0" />
+      </joint>
+      <joint name="${prefix}${finger}_finger1_joint" type="revolute">
+        <parent link="${prefix}base_link" />
+        <child link="${prefix}${finger}_finger1_link" />
+        <axis xyz="0 -1 0" />
+        <origin xyz="${x_gain * 30.60114e-3} 0.0 54.90452e-3" rpy="0 0 ${yaw}" />
+        <limit lower="0.0" upper="0.8" velocity="0.5" effort="50" />
+        <xacro:if value="${mimic and mirror}">
+          <mimic joint="${prefix}left_finger1_joint" />
         </xacro:if>
+      </joint>
+      <joint name="${prefix}${finger}_finger2_joint" type="fixed">
+        <parent link="${prefix}${finger}_finger1_link" />
+        <child link="${prefix}${finger}_finger2_link" />
+        <origin xyz="33.89925e-3 0.0 -4.8891e-3" rpy="0 0 0" />
+      </joint>
+      <joint name="${prefix}${finger}_finger3_joint" type="continuous">
+        <parent link="${prefix}base_link" />
+        <child link="${prefix}${finger}_finger3_link" />
+        <axis xyz="0 -1 0" />
+        <origin xyz="${x_gain * 12.7e-3} 0.0 61.42e-3" rpy="0 0 ${yaw}" />
+        <xacro:if value="${mimic}">
+          <mimic joint="${prefix}${finger}_finger1_joint" />
+        </xacro:if>
+      </joint>
+      <joint name="${prefix}${finger}_finger4-2_joint" type="revolute">
+        <parent link="${prefix}${finger}_finger2_link" />
+        <child link="${prefix}${finger}_finger4_link" />
+        <axis xyz="0 -1 0" />
+        <origin xyz="4.30896e-3 0.0 47.39022e-3" rpy="0 0 0" />
+        <limit lower="-${2*pi/3}" upper="${pi/4}" velocity="0.5" effort="50" />
+        <xacro:if value="${mimic}">
+          <mimic joint="${prefix}${finger}_finger1_joint" multiplier="-1" />
+        </xacro:if>
+      </joint>
 
-        <!-- Macro to define a single finger -->
-        <xacro:macro name="finger" params="finger mirror">
-            <xacro:if value="${mirror}">
-                <xacro:property name="x_gain" value="-1" />
-                <xacro:property name="yaw" value="${pi}" />
-            </xacro:if>
-            <xacro:unless value="${mirror}">
-                <xacro:property name="x_gain" value="1" />
-                <xacro:property name="yaw" value="0" />
-            </xacro:unless>
-
-            <link name="${prefix}${finger}_fingertip_link">
-                <visual>
-                    <geometry>
-                        <mesh filename="file://${description_package}/meshes/visual/fingertip.dae" />
-                    </geometry>
-                </visual>
-                <collision>
-                    <geometry>
-                        <mesh filename="file://${description_package}/meshes/collision/fingertip.stl" />
-                    </geometry>
-                </collision>
-                <inertial>
-                    <origin xyz="-7.9e-3 0.0 15.8e-3" rpy="0 0 0" />
-                    <mass value="0.020" />
-                    <inertia ixx="3.6e-6" iyy="3.3e-6" izz="1.3e-6" ixy="0.0" ixz="0.5e-6" iyz="0.0" />
-                </inertial>
-            </link>
-            <link name="${prefix}${finger}_finger1_link">
-                <visual>
-                    <geometry>
-                        <mesh filename="file://${description_package}/meshes/visual/finger1.dae" />
-                    </geometry>
-                </visual>
-                <collision>
-                    <geometry>
-                        <mesh filename="file://${description_package}/meshes/collision/finger1.stl" />
-                    </geometry>
-                </collision>
-                <inertial>
-                    <origin xyz="12.1e-3 0.0 -0.9e-3" rpy="0 0 0" />
-                    <mass value="0.013" />
-                    <inertia ixx="0.3e-6" iyy="2.1e-6" izz="2.1e-6" ixy="0.0" ixz="0.1e-6" iyz="0.0" />
-                </inertial>
-            </link>
-            <link name="${prefix}${finger}_finger2_link">
-                <visual>
-                    <geometry>
-                        <mesh filename="file://${description_package}/meshes/visual/finger2.dae" />
-                    </geometry>
-                </visual>
-                <collision>
-                    <geometry>
-                        <mesh filename="file://${description_package}/meshes/collision/finger2.stl" />
-                    </geometry>
-                </collision>
-                <inertial>
-                    <origin xyz="1.4e-3 0.0 18.9e-3" rpy="0 0 0" />
-                    <mass value="0.039" />
-                    <inertia ixx="12.7e-6" iyy="10.9e-6" izz="4.9e-6" ixy="0.0" ixz="-2.2e-6" iyz="0.0" />
-                </inertial>
-            </link>
-            <link name="${prefix}${finger}_finger3_link">
-                <visual>
-                    <geometry>
-                        <mesh filename="file://${description_package}/meshes/visual/finger3.dae" />
-                    </geometry>
-                </visual>
-                <collision>
-                    <geometry>
-                        <mesh filename="file://${description_package}/meshes/collision/finger3.stl" />
-                    </geometry>
-                </collision>
-                <inertial>
-                    <origin xyz="19.5e-3 0.0 21.9e-3" rpy="0 0 0" />
-                    <mass value="0.028" />
-                    <inertia ixx="8.7e-6" iyy="8.1e-6" izz="7.8e-6" ixy="0.0" ixz="-3.7e-6" iyz="0.0" />
-                </inertial>
-            </link>
-            <link name="${prefix}${finger}_finger4_link">
-                <visual>
-                    <geometry>
-                        <mesh filename="file://${description_package}/meshes/visual/finger4.dae" />
-                    </geometry>
-                </visual>
-                <collision>
-                    <geometry>
-                        <mesh filename="file://${description_package}/meshes/collision/finger4.stl" />
-                    </geometry>
-                </collision>
-                <inertial>
-                    <origin xyz="-9.3e-3 0.0 4.0e-3" rpy="0 0 0" />
-                    <mass value="0.018" />
-                    <inertia ixx="0.9e-6" iyy="1.6e-6" izz="1.7e-6" ixy="0.0" ixz="0.4e-6" iyz="0.0" />
-                </inertial>
-            </link>
-
-            <joint name="${prefix}${finger}_fingertip_joint" type="fixed">
-                <parent link="${prefix}${finger}_finger4_link" />
-                <child link="${prefix}${finger}_fingertip_link" />
-                <origin xyz="-11.40173e-3 0.0 13.01497e-3" rpy="0 0 0" />
-            </joint>
-            <joint name="${prefix}${finger}_finger1_joint" type="revolute">
-                <parent link="${prefix}base_link" />
-                <child link="${prefix}${finger}_finger1_link" />
-                <axis xyz="0 -1 0" />
-                <origin xyz="${x_gain * 30.60114e-3} 0.0 54.90452e-3" rpy="0 0 ${yaw}" />
-                <limit lower="0.0" upper="0.8" velocity="0.5" effort="50" />
-                <xacro:if value="${mimic and mirror}">
-                    <mimic joint="${prefix}left_finger1_joint" />
-                </xacro:if>
-            </joint>
-            <joint name="${prefix}${finger}_finger2_joint" type="fixed">
-                <parent link="${prefix}${finger}_finger1_link" />
-                <child link="${prefix}${finger}_finger2_link" />
-                <origin xyz="33.89925e-3 0.0 -4.8891e-3" rpy="0 0 0" />
-            </joint>
-            <joint name="${prefix}${finger}_finger3_joint" type="continuous">
-                <parent link="${prefix}base_link" />
-                <child link="${prefix}${finger}_finger3_link" />
-                <axis xyz="0 -1 0" />
-                <origin xyz="${x_gain * 12.7e-3} 0.0 61.42e-3" rpy="0 0 ${yaw}" />
-                <xacro:if value="${mimic}">
-                    <mimic joint="${prefix}${finger}_finger1_joint" />
-                </xacro:if>
-            </joint>
-            <joint name="${prefix}${finger}_finger4-2_joint" type="revolute">
-                <parent link="${prefix}${finger}_finger2_link" />
-                <child link="${prefix}${finger}_finger4_link" />
-                <axis xyz="0 -1 0" />
-                <origin xyz="4.30896e-3 0.0 47.39022e-3" rpy="0 0 0" />
-                <limit lower="-${2*pi/3}" upper="${pi/4}" velocity="0.5" effort="50" />
-                <xacro:if value="${mimic}">
-                    <mimic joint="${prefix}${finger}_finger1_joint" multiplier="-1" />
-                </xacro:if>
-            </joint>
-
-            <xacro:unless value="${mimic}">
-                <!-- Close loop by injecting SDF -->
-                <gazebo>
-                    <joint name="${prefix}${finger}_finger4-3_joint" type="revolute">
-                        <parent>${prefix}${finger}_finger3_link</parent>
-                        <child>${prefix}${finger}_finger4_link</child>
-                        <axis>
-                            <xyz>0 -1 0</xyz>
-                        </axis>
-                        <pose>-17.90144e-3 0.0 6.51468e-3 0 0 0</pose>
-                    </joint>
-                </gazebo>
-            </xacro:unless>
-        </xacro:macro>
-
-        <xacro:finger finger="left" mirror="false" />
-        <xacro:finger finger="right" mirror="true" />
+      <xacro:unless value="${mimic}">
+        <!-- Close loop by injecting SDF -->
+        <gazebo>
+          <joint name="${prefix}${finger}_finger4-3_joint" type="revolute">
+            <parent>${prefix}${finger}_finger3_link</parent>
+            <child>${prefix}${finger}_finger4_link</child>
+            <axis>
+              <xyz>0 -1 0</xyz>
+            </axis>
+            <pose>-17.90144e-3 0.0 6.51468e-3 0 0 0</pose>
+          </joint>
+        </gazebo>
+      </xacro:unless>
     </xacro:macro>
+
+    <xacro:finger finger="left" mirror="false" />
+    <xacro:finger finger="right" mirror="true" />
+  </xacro:macro>
 </robot>

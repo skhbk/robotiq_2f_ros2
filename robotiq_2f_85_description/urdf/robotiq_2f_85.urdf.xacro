@@ -1,31 +1,33 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro" name="robotiq_2f_85">
-    <!-- Parameters -->
-    <xacro:arg name="prefix" default="robotiq_2f_" />
-    <xacro:arg name="ur_coupling" default="false" />
-    <xacro:arg name="mimic" default="true" />
+  <!-- Parameters -->
+  <xacro:arg name="prefix" default="robotiq_2f_" />
+  <xacro:arg name="ur_coupling" default="false" />
+  <xacro:arg name="mimic" default="true" />
+  <xacro:arg name="sim_gazebo" default="false" />
 
-    <!-- Import macro -->
-    <xacro:include filename="$(find robotiq_2f_85_description)/urdf/robotiq_2f_85_macro.xacro" />
+  <!-- Import macro -->
+  <xacro:include filename="$(find robotiq_2f_85_description)/urdf/robotiq_2f_85_macro.xacro" />
 
-    <xacro:robotiq_2f_85
-        name="robotiq_2f_85"
-        prefix="$(arg prefix)"
-        ur_coupling="$(arg ur_coupling)"
-        mimic="$(arg mimic)"
-    />
+  <xacro:robotiq_2f_85
+    name="robotiq_2f_85"
+    prefix="$(arg prefix)"
+    ur_coupling="$(arg ur_coupling)"
+    mimic="$(arg mimic)"
+    sim_gazebo="$(arg sim_gazebo)"
+  />
 
-    <!-- Joint with world -->
-    <link name="world" />
-    <xacro:if value="$(arg ur_coupling)">
-        <xacro:property name="root_link" value="$(arg prefix)coupling_link" />
-    </xacro:if>
-    <xacro:unless value="$(arg ur_coupling)">
-        <xacro:property name="root_link" value="$(arg prefix)base_link" />
-    </xacro:unless>
-    <joint name="$(arg prefix)root_joint" type="fixed">
-        <parent link="world" />
-        <child link="${root_link}" />
-        <origin xyz="0 0 0.01" rpy="0 0 0" />
-    </joint>
+  <!-- Joint with world -->
+  <link name="world" />
+  <xacro:if value="$(arg ur_coupling)">
+    <xacro:property name="root_link" value="$(arg prefix)coupling_link" />
+  </xacro:if>
+  <xacro:unless value="$(arg ur_coupling)">
+    <xacro:property name="root_link" value="$(arg prefix)base_link" />
+  </xacro:unless>
+  <joint name="$(arg prefix)root_joint" type="fixed">
+    <parent link="world" />
+    <child link="${root_link}" />
+    <origin xyz="0 0 0.01" rpy="0 0 0" />
+  </joint>
 </robot>
