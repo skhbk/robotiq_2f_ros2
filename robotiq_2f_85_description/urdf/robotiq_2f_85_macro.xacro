@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
-    <xacro:macro name="robotiq_2f_85" params="name prefix ur_coupling:=false mimic:=true">
+    <xacro:macro name="robotiq_2f_85" params="name prefix ur_coupling:=false mimic:=true sim_gazebo:=false">
         <xacro:property name="description_package" value="$(find robotiq_2f_85_description)" />
 
         <!-- ros2_control -->
         <xacro:include filename="${description_package}/urdf/robotiq_2f_85.ros2_control.xacro" />
-        <xacro:robotiq_2f_85_ros2_control name="${name}" prefix="${prefix}" />
+        <xacro:robotiq_2f_85_ros2_control name="${name}" prefix="${prefix}" sim_gazebo="${sim_gazebo}" />
 
         <link name="${prefix}base_link">
             <visual>
